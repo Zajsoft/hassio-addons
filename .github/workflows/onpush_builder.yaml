@@ -34,16 +34,6 @@ jobs:
           changed_addons=$(echo "$changed_config_files" | awk -F/ '{print $1}' | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "Changed addons: $changed_addons"
           echo "changed_addons=$changed_addons" >> "$GITHUB_OUTPUT"
-      - name: Check for Dockerfile (case-insensitive)
-        id: dockerfile_check
-        run: |
-          cd "${{ matrix.addon }}"
-          if find . -maxdepth 1 -type f -iname "dockerfile" | grep -q .; then
-            echo "dockerfile_exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "No Dockerfile found in ${{ matrix.addon }}, skipping build"
-            echo "dockerfile_exists=false" >> "$GITHUB_OUTPUT"
-          fi
 
   # 2. Pre-build sanitize: normalize spaces, fix script permissions, single commit per add-on
   prebuild-sanitize:
@@ -99,7 +89,7 @@ jobs:
 
   # 4. Build images for changed addons/arches
   build:
-    if: ${{ needs.detect-changed-addons.outputs.changedAddons != '' && needs.detect-changed-addons.outputs.changedAddons != '[]'  && steps.dockerfile_check.outputs.dockerfile_exists == 'true' }}
+    if: ${{ needs.detect-changed-addons.outputs.changedAddons != '' && needs.detect-changed-addons.outputs.changedAddons != '[]' }}
     needs: [detect-changed-addons, lint_config]
     runs-on: ubuntu-latest
     environment: CR_PAT
