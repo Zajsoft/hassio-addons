@@ -100,5 +100,5 @@
   "slug": "nzbget",
   "udev": true,
   "url": "https://github.com/alexbelgium/hassio-addons",
-  "version": "v25.0-ls202"
+  "version": "v25.1-ls202"
 }

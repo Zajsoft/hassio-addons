@@ -99,6 +99,6 @@
   "slug": "fireflyiii_data_importer",
   "udev": true,
   "url": "https://github.com/alexbelgium/hassio-addons",
-  "version": "20250617.1",
+  "version": "20250627.1",
   "webui": "[PROTO:ssl]://[HOST]:[PORT:8080]"
 }
