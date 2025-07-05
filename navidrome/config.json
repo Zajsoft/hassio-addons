@@ -1,21 +1,11 @@
 {
-  "arch": [
-    "amd64",
-    "aarch64"
-  ],
-  "backup_exclude": [
-    "**/cache/**"
-  ],
+  "arch": ["amd64", "aarch64"],
+  "backup_exclude": ["**/cache/**"],
   "codenotary": "alexandrep.github@gmail.com",
   "description": "Navidrome for Home Assistant",
   "image": "ghcr.io/alexbelgium/navidrome-{arch}",
   "init": false,
-  "map": [
-    "addon_config:rw",
-    "media",
-    "share:rw",
-    "ssl:rw"
-  ],
+  "map": ["addon_config:rw", "media", "share:rw", "ssl:rw"],
   "name": "Navidrome",
   "options": {
     "base_url": "/",
@@ -59,6 +49,6 @@
   "slug": "navidrome",
   "udev": true,
   "url": "https://github.com/alexbelgium/hassio-addons/tree/master/navidrome",
-  "version": "0.56.1",
+  "version": "0.57.0",
   "webui": "[PROTO:ssl]://[HOST]:[PORT:4533]"
 }
