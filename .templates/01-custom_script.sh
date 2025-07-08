@@ -60,7 +60,7 @@ while IFS= read -r line; do
 	# Check if line is not empty and does not start with #
 	if [[ -n "$line" ]] && [[ ! "$line" =~ ^# ]]; then
 		bashio::log.green "... script found, executing"
-		/."$CONFIGSOURCE"
-		exit 0
+		bash "$CONFIGSOURCE"
+		break
 	fi
 done <"$CONFIGSOURCE"

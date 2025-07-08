@@ -115,6 +115,7 @@ cp "$CONFIGSOURCE" /tempenv
 sed -i '/^#/d' /tempenv
 sed -i '/^[[:space:]]*$/d' /tempenv
 sed -i '/^$/d' /tempenv
+echo "" >>/tempenv
 
 # Exit if empty
 if [ ! -s /tempenv ]; then
@@ -144,31 +145,32 @@ while IFS= read -r line; do
 	fi
 
 	# Check if secret
-	if [[ "${line}" == *'!secret '* ]]; then
-		echo "secret detected"
+	if [[ "$line" == *!secret* ]]; then
+		echo "Secret detected"
 		if [ ! -f "$SECRETSFILE" ]; then
-			bashio:log.fatal "Secrets file not found, ${line} skipped"
+			bashio::log.fatal "Secrets file not found in $SECRETSFILE, $line skipped"
 			continue
 		fi
-		secret=${line#*secret }
+		secret=$(echo "$line" | sed 's/.*!secret \(.*\)/\1/')
 		# Check if single match
 		secretnum=$(sed -n "/$secret:/=" "$SECRETSFILE")
-		[[ $(echo $secretnum) == *' '* ]] && bashio::exit.nok "There are multiple matches for your password name. Please check your secrets.yaml file"
+		if [[ $(echo "$secretnum" | grep -q ' ') ]]; then
+			bashio::exit.nok "There are multiple matches for your password name. Please check your secrets.yaml file"
+		fi
 		# Get text
-		secret=$(sed -n "/$secret:/p" "$SECRETSFILE")
-		secret=${secret#*: }
-		line="${line%%=*}='$secret'"
+		secret_value=$(sed -n "/$secret:/s/.*: //p" "$SECRETSFILE")
+		line="${line%%=*}='$secret_value'"
 	fi
 
 	# Data validation
-	if [[ "$line" =~ ^.+[=].+$ ]]; then
+	if [[ "$line" =~ ^[^[:space:]]+.+[=].+$ ]]; then
 		# extract keys and values
 		KEYS="${line%%=*}"
 		VALUE="${line#*=}"
 		# Check if VALUE is quoted
-		if [[ "$VALUE" != \"*\" ]] && [[ "$VALUE" != \'*\' ]]; then
-			VALUE="\"$VALUE\""
-		fi
+		#if [[ "$VALUE" != \"*\" ]] && [[ "$VALUE" != \'*\' ]]; then
+		#	VALUE="\"$VALUE\""
+		#fi
 		line="${KEYS}=${VALUE}"
 		export "$line"
 		# export to python
