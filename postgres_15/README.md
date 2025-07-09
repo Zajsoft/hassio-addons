@@ -1,4 +1,3 @@
-## &#9888; Open Issue : [Postgres 15 15.7-45 update break immich (opened 2025-06-23)](https://github.com/alexbelgium/hassio-addons/issues/1924) by [@lagge78](https://github.com/lagge78)
 # Home assistant add-on: Postgres
 
 [![Donate][donation-badge]](https://www.buymeacoffee.com/alexbelgium)
@@ -35,6 +34,7 @@ default user: `postgres`
 password: `set by POSTGRES_PASSWORD`
 
 You can configure this options:
+
 ```yaml
 POSTGRES_PASSWORD
 POSTGRES_USER
@@ -42,6 +42,7 @@ POSTGRES_DB
 POSTGRES_INITDB_ARGS
 POSTGRES_HOST_AUTH_METHOD
 ```
+
 For more info check [base image docs](https://hub.docker.com/_/postgres).
 
 By default `postgresql.conf` is stored in volume accessible by other addons and Home Assistant, so you can conviniently modify it by e.g. File Editor addon. If you prefer better security change `CONFIG_LOCATION` to e.g. `/data/orig/postgresql.conf`, so it will be acessible only to this addon, but you will have to modify it by the [Hassio SSH](https://developers.home-assistant.io/docs/operating-system/debugging/).
@@ -58,6 +59,15 @@ The installation of this add-on is pretty straightforward and not different in c
 1. Start the add-on.
 1. Check the logs of the add-on to see if everything went well.
 1. Use any Postgres client to connect, e.g. to `homeassistant.local:5432`
+
+## Security
+
+By default, Postgres will be reachable on the local network of your host system. To improve security, you can disable this behavior and make Postgres available only to other Add-ons within Home Assistant.
+
+1. Configure all Add-ons that use Postgres to connect via the internal DNS name: `db21ed7f-postgres:5432`.
+2. Go to **Settings → Add-ons → Postgres 15 → Configuration**, and under **Network**, remove port `5432` by clearing the text field.
+3. Click **Save** and restart the Add-on.
+4. Postgres is now only accessible from other Add-ons and no longer reachable from your local network (e.g., laptop, IoT devices, etc.).
 
 ## Support
 
