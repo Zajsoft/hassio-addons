@@ -46,7 +46,6 @@ The installation of this add-on is pretty straightforward and not different in c
 
 Webui can be found at <http://homeassistant:8787/readarr> or with ingress ☝️ by clicking the `Open Web UI` button.
 
-
 The default username/password : described in the startup log.
 
 ## Configuration
@@ -78,7 +77,7 @@ For more control, you can add enviroment variables by defining them as keys in a
 TZ: Europe/Paris
 ```
 
-more info : https://github.com/alexbelgium/hassio-addons/wiki/Add%E2%80%90ons-feature-:-add-env-variables
+more info : https://github.com/alexbelgium/hassio-addons/wiki/Addons-feature:-add-env-variables
 
 ## Support
 
