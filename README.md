@@ -48,7 +48,7 @@ If you want to do add the repository manually, please follow the procedure highl
 
 ### Number of addons
 
-- In the repository : 106
+- In the repository : 107
 - Installed : 72775
 
 ### Top 3
@@ -267,6 +267,16 @@ If you want to do add the repository manually, please follow the procedure highl
 ![amd64][amd64-badge]
 ![armv7no][armv7no-badge]
 ![ingress][ingress-badge]
+![smb][smb-badge]
+![localdisks][localdisks-badge]
+
+&#10003; ![image](https://api.iconify.design/mdi/image-multiple.svg) [Ente](ente/) : Self-hosted, end-to-end-encrypted photo & video storage (Ente server + MinIO)
+
+&emsp;&emsp;![Version](https://img.shields.io/badge/dynamic/json?label=Version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Fente%2Fconfig.json)
+![Update](https://img.shields.io/badge/dynamic/json?label=Updated&query=%24.last_update&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Fente%2Fupdater.json)
+![aarch64][aarch64-badge]
+![amd64][amd64-badge]
+![armv7no][armv7no-badge]
 ![smb][smb-badge]
 ![localdisks][localdisks-badge]
 
