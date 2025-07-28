@@ -89,10 +89,12 @@
   "panel_admin": false,
   "panel_icon": "mdi:bird",
   "ports": {
-    "8080/tcp": 8080
+    "8080/tcp": 8080,
+    "9090/tcp": 9090
   },
   "ports_description": {
-    "8080/tcp": "Web ui"
+    "8080/tcp": "Web ui",
+    "9090/tcp": "Telemetry endpoint"
   },
   "privileged": [
     "SYS_ADMIN",
@@ -115,5 +117,5 @@
   "slug": "birdnet-go",
   "udev": true,
   "url": "https://github.com/alexbelgium/hassio-addons/tree/master/birdnet-go",
-  "version": "nightly-20250710"
+  "version": "nightly-20250725"
 }

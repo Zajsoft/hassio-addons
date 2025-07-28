@@ -1,4 +1,3 @@
-## &#9888; Open Issue : [🐛 [BirdNET-Go] HA Ingress url does not redirect to url with date (opened 2025-04-02)](https://github.com/alexbelgium/hassio-addons/issues/1830) by [@phobiac](https://github.com/phobiac)
 # Home assistant add-on: Birdnet-Go
 
 [![Donate][donation-badge]](https://www.buymeacoffee.com/alexbelgium)

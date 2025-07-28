@@ -67,7 +67,10 @@
     "/dev/nvme1",
     "/dev/nvme2"
   ],
-  "environment": {},
+  "environment": {
+    "GUACAMOLE_HOME": "/config",
+    "PGDATA": "/config/postgres"
+  },
   "image": "ghcr.io/alexbelgium/guacamole-{arch}",
   "ingress": true,
   "init": false,
@@ -97,6 +100,6 @@
   "slug": "guacamole",
   "udev": true,
   "url": "https://github.com/alexbelgium/hassio-addons",
-  "version": "1.5.5-bullseye",
+  "version": "1.6.0-4",
   "video": true
 }

@@ -1,3 +1,12 @@
+## 1.6.0-4 (24-07-2025)
+- Minor bugs fixed
+## 1.6.0-3 (24-07-2025)
+- Minor bugs fixed
+## 1.6.0-2 (20-07-2025)
+- Minor bugs fixed
+
+## 1.6.0-bullseye (18-07-2025)
+- Minor bugs fixed
 
 ## 1.5.5-bullseye (25-01-2025)
 - Update to latest version from abesnier/guacamole
