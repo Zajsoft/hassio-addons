@@ -48,19 +48,19 @@ If you want to do add the repository manually, please follow the procedure highl
 
 ### Number of addons
 
-- In the repository : 107
-- Installed : 75347
+- In the repository : 108
+- Installed : 74436
 
 ### Top 3
 
 1. Filebrowser (8427x)
 2. Portainer (6309x)
-3. Myelectricaldata (3540x)
+3. Myelectricaldata (3575x)
 
 ### Architectures used
 
 - amd64: 61%
-- aarch64: 34%
+- aarch64: 35%
 - armv7: 5%
 
 ### Stars evolution
@@ -270,7 +270,7 @@ If you want to do add the repository manually, please follow the procedure highl
 ![smb][smb-badge]
 ![localdisks][localdisks-badge]
 
-&#10003; ![image](https://api.iconify.design/mdi/image-multiple.svg) [Ente](ente/) : Self-hosted, end-to-end-encrypted photo & video storage (Ente server + MinIO)
+&#10003;  [Ente](ente/) : Self-hosted, end-to-end-encrypted photo & video storage (Ente server + MinIO)
 
 &emsp;&emsp;![Version](https://img.shields.io/badge/dynamic/json?label=Version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Fente%2Fconfig.json)
 ![Update](https://img.shields.io/badge/dynamic/json?label=Updated&query=%24.last_update&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Fente%2Fupdater.json)
@@ -645,6 +645,14 @@ If you want to do add the repository manually, please follow the procedure highl
 ![aarch64][aarch64-badge]
 ![amd64][amd64-badge]
 ![armv7][armv7-badge]
+
+&#10003;  [Omni Tools](omni-tools/) : Self-hosted collection of powerful web-based tools for everyday tasks. No ads, no tracking, just fast, accessible utilities right from your browser
+
+&emsp;&emsp;![Version](https://img.shields.io/badge/dynamic/json?label=Version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Fomni-tools%2Fconfig.json)
+![Update](https://img.shields.io/badge/dynamic/json?label=Updated&query=%24.last_update&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Fomni-tools%2Fupdater.json)
+![aarch64][aarch64-badge]
+![amd64][amd64-badge]
+![armv7no][armv7no-badge]
 
 &#10003;  [Openproject](openproject/) : Openproject for Home Assistant
 

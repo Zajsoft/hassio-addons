@@ -39,13 +39,31 @@ comparison to installing any other Hass.io add-on.
 
 ## Configuration
 
-Webui can be found at <http://homeassistant:80>.
-Create the db in /data/...
+Webui can be found at <http://homeassistant:80> or through the sidebar using Ingress.
+Configurations can be done through the app webUI, except for the following options.
+
+### Setup Steps
+
+1. Start the addon and access the web interface
+2. Follow the setup wizard to create admin account
+3. Configure your services and tabs through the web interface
+4. Database files are stored in `/data/` directory
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `PGID` | int | `0` | Group ID for file permissions |
+| `PUID` | int | `0` | User ID for file permissions |
+
+### Example Configuration
 
 ```yaml
-PGID: user, can't be 0
-GPID: user, can't be 0
+PGID: 1000
+PUID: 1000
 ```
+
+**Note**: Organizr requires minimal configuration through the addon options. Most settings are configured through the web interface including service integration, authentication, and theming.
 
 ## Support
 

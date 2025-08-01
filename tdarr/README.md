@@ -22,21 +22,17 @@ _Thanks to everyone having starred my repo! To star it click on the image below,
 
 ## About
 
-[Tdarr](https://tdarr.io) is a closed-source distributed transcoding system for automating media library transcode/remux management and making sure your files are exactly how you need them to be in terms of codecs/streams/containers and so on. Put your spare hardware to use with Tdarr Nodes for Windows, Linux (including Linux arm) and macOS.
+[Tdarr](https://tdarr.io) is a distributed transcoding system for automating media library transcode/remux management using FFmpeg/HandBrake. It ensures your files are exactly how you need them to be in terms of codecs, streams, and containers. Tdarr supports distributed processing, allowing you to put your spare hardware to use with Tdarr Nodes for Windows, Linux (including ARM), and macOS.
+
+Key features:
+- Distributed transcoding across multiple nodes
+- Automated media library management
+- Support for FFmpeg and HandBrake
+- Hardware acceleration support
+- Web-based management interface
+- Plugin-based workflow system
 
 This addon is based on the [docker image](https://hub.docker.com/r/hurlenko/Tdarr) from hurlenko.
-
-## Configuration
-
-Webui can be found at <http://homeassistant:8265>.
-App documentation can be found here : https://docs.tdarr.io/docs/welcome/what/
-
-```yaml
-localdisks: sda1 #put the hardware name of your drive to mount separated by commas, or its label. ex. sda1, sdb1, MYNAS...
-networkdisks: "//SERVER/SHARE" # optional, list of smbv2/3 servers to mount, separated by commas
-cifsusername: "username" # optional, smb username, same for all smb shares
-cifspassword: "password" # optional, smb password, same for all smb shares)
-```
 
 ## Installation
 
@@ -48,13 +44,81 @@ comparison to installing any other Hass.io add-on.
 1. Click the `Save` button to store your configuration.
 1. Start the add-on.
 1. Check the logs of the add-on to see if everything went well.
-1. Carefully configure the add-on to your preferences, see the official documentation for for that.
+1. Carefully configure the add-on to your preferences, see the official documentation for that.
+
+## Configuration
+
+Web UI can be found at `<your-ip>:8265` or through the sidebar using Ingress.
+The server port is `8266` for connecting external Tdarr nodes.
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `CONFIG_LOCATION` | str | `/config/addons_config/tdarr` | Path where Tdarr config is stored |
+| `TZ` | str | | Timezone (e.g., `Europe/London`) |
+| `localdisks` | str | | Local drives to mount (e.g., `sda1,sdb1,MYNAS`) |
+| `networkdisks` | str | | SMB shares to mount (e.g., `//SERVER/SHARE`) |
+| `cifsusername` | str | | SMB username for network shares |
+| `cifspassword` | str | | SMB password for network shares |
+| `cifsdomain` | str | | SMB domain for network shares |
+
+### Example Configuration
+
+```yaml
+CONFIG_LOCATION: "/config/addons_config/tdarr"
+TZ: "Europe/London"
+localdisks: "sda1,sdb1"
+networkdisks: "//192.168.1.100/media,//nas.local/transcoding"
+cifsusername: "mediauser"
+cifspassword: "password123"
+cifsdomain: "workgroup"
+```
+
+### Setting up Distributed Transcoding
+
+1. **Configure the Server**: 
+   - Access the Web UI at `<your-ip>:8265`
+   - Set up your media libraries and transcoding settings
+   - Configure plugins and workflows as needed
+
+2. **Add External Nodes**:
+   - Install Tdarr Node on additional machines
+   - Point them to your Home Assistant IP on port `8266`
+   - Nodes will automatically register and appear in the Web UI
+
+3. **Hardware Acceleration**:
+   - The addon includes hardware acceleration support
+   - Configure GPU transcoding in the Tdarr Web UI settings
+   - Supported acceleration: Intel QuickSync, NVIDIA NVENC, AMD VCE
+
+### Mounting Drives
+
+This addon supports mounting both local drives and remote SMB shares:
+
+- **Local drives**: See [Mounting Local Drives in Addons](https://github.com/alexbelgium/hassio-addons/wiki/Mounting-Local-Drives-in-Addons)
+- **Remote shares**: See [Mounting Remote Shares in Addons](https://github.com/alexbelgium/hassio-addons/wiki/Mounting-remote-shares-in-Addons)
+
+### Custom Scripts and Environment Variables
+
+This addon supports custom scripts and environment variables through the `addon_config` mapping:
+
+- **Custom scripts**: See [Running Custom Scripts in Addons](https://github.com/alexbelgium/hassio-addons/wiki/Running-custom-scripts-in-Addons)
+- **Environment variables**: See [Add Environment Variables to your Addon](https://github.com/alexbelgium/hassio-addons/wiki/Add-Environment-variables-to-your-Addon)
+
+### Hardware Acceleration Notes
+
+The addon includes device access for hardware acceleration:
+- Intel QuickSync: `/dev/dri` devices are mapped
+- NVIDIA: Environment variables are set for GPU detection
+- AMD: Hardware acceleration supported through available devices
+
+Configure hardware acceleration in the Tdarr Web UI under Settings > FFmpeg/HandBrake settings.
 
 ## Support
 
-Create an issue on github, or ask on the [home assistant thread](https://community.home-assistant.io/t/home-assistant-addon-Tdarr/282108/3)
+- Official Tdarr documentation: [https://docs.tdarr.io/](https://docs.tdarr.io/)
+- Create an issue on [GitHub](https://github.com/alexbelgium/hassio-addons/issues)
+- Ask on the [Home Assistant Community thread](https://community.home-assistant.io/t/home-assistant-addon-tdarr/282108/3)
 
 [repository]: https://github.com/alexbelgium/hassio-addons
-[aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
-[amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
-[armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg

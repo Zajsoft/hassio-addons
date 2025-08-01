@@ -1,122 +1,134 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
-# shellcheck disable=SC1090
 
-set -Eeuo pipefail
+set -e  # Exit immediately if a command exits with a non-zero status
 
-echo "Starting..."
+
+# Detect if this is PID1 (main container process) — do this once at the start
+PID1=false
+if [ "$$" -eq 1 ]; then
+    PID1=true
+    echo "Starting as entrypoint"
+else
+    echo "Starting custom scripts"
+fi
+
+######################
+# Select the shebang #
+######################
+
+# List of candidate shebangs, prioritize with-contenv if PID1
+candidate_shebangs=()
+if $PID1; then
+    candidate_shebangs+=("/command/with-contenv bashio" "/usr/bin/with-contenv bashio")
+fi
+candidate_shebangs+=(
+    "/usr/bin/env bashio"
+    "/usr/bin/bashio"
+)
+
+# Find the first valid shebang interpreter in candidate list by probing bashio::addon.version
+shebang=""
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+for candidate in "${candidate_shebangs[@]}"; do
+    echo "Trying $candidate"
+    # Build a tiny probe script that prints the addon version
+    printf '#!%s\n' "$candidate" >"$tmp"
+    cat >>"$tmp" <<'EOF'
+out="$(bashio::addon.version 2>/dev/null || true)"
+[ -n "$out" ] && printf '%s\n' "$out"
+EOF
+    chmod +x "$tmp"
+
+    # Run the probe and check for at least one digit in the output
+    out="$(exec "$tmp" 2>/dev/null || true)"
+    if printf '%s' "$out" | grep -qE '[0-9]'; then
+        shebang="$candidate"
+        break
+    fi
+done
+
+if [ -z "$shebang" ]; then
+    echo "ERROR: No valid shebang found!" >&2
+    exit 1
+fi
 
 ####################
 # Starting scripts #
 ####################
 
-PID1=false
-if [ "$$" -eq 1 ]; then
-    PID1=true
-fi
-
-run_script() {
-    local runfile="$1"
-    local script_kind="$2"
-
-    echo "$runfile: executing"
-
-    # FIX: Correct current shebang parsing
-    local currentshebang
-    currentshebang="$(sed -n '1{s/^#![[:blank:]]*//p;q}' "$runfile")"
-
-    # IMPROVED: Fix shebang if interpreter missing
-    if [ ! -f "${currentshebang%% *}" ]; then
-        local shebanglist="/usr/bin/bashio /usr/bin/bash /usr/bin/sh /bin/bash /bin/sh"
-        if ! "$PID1"; then
-            shebanglist="/usr/bin/with-contenv bashio /command/with-contenv bashio $shebanglist"
-        fi
-        for shebang in $shebanglist; do
-            local command_path="${shebang%% *}"
-            if [ -x "$command_path" ] && "$command_path" echo "yes" > /dev/null 2>&1; then
-                echo "Valid shebang: $shebang"
-                sed -i "1s|.*|#!$shebang|" "$runfile"
-                break
-            fi
-        done
-    fi
-
-    # Check if run as root
-    if [ "$(id -u)" -eq 0 ]; then
-        chown "$(id -u)":"$(id -g)" "$runfile"
-        chmod a+x "$runfile"
-    else
-        if [ -t 1 ]; then
-            echo -e "\e[38;5;214m$(date) WARNING: Script executed as UID $(id -u), chown/chmod may fail\e[0m"
-        else
-            echo "$(date) WARNING: Script executed as UID $(id -u), chown/chmod may fail"
-        fi
-        # Disable chown/chmod in script
-        sed -i -E 's/^([[:space:]]*)chown /\1true # chown /' "$runfile"
-        sed -i -E 's/^([[:space:]]*)chmod /\1true # chmod /' "$runfile"
-    fi
-
-    # Replace s6-setuidgid with su fallback if s6-setuidgid is missing
-    if ! command -v s6-setuidgid >/dev/null 2>&1; then
-        sed -i -E 's|s6-setuidgid[[:space:]]+([a-zA-Z0-9._-]+)[[:space:]]+(.*)$|su -s /bin/bash \1 -c "\2"|g' "$runfile"
-    fi
-
-    # Execute script
-    if [[ "$script_kind" == service ]]; then
-        "$runfile" &
-    else
-        if [ "${ha_entry_source:-null}" = true ]; then
-            sed -Ei 's/(^|[[:space:]])exit ([0-9]+)/\1return \2 || exit \2/g' "$runfile"
-            sed -i "s/bashio::exit.nok/return 1/g" "$runfile"
-            sed -i "s/bashio::exit.ok/return 0/g" "$runfile"
-            source "$runfile" || echo -e "\033[0;31mError\033[0m : $runfile exiting $?"
-        else
-            "$runfile" || echo -e "\033[0;31mError\033[0m : $runfile exiting $?"
-        fi
-    fi
-
-    # Cleanup only temporary scripts
-    if [[ "$script_kind" != service && "$runfile" == /tmp/* ]]; then
-        rm -f "$runfile"
-    fi
-}
-
-# Loop through /etc/cont-init.d/*
+# Loop through /etc/cont-init.d/* scripts and execute them
 for SCRIPTS in /etc/cont-init.d/*; do
     [ -e "$SCRIPTS" ] || continue
-    run_script "$SCRIPTS" script
+    echo "$SCRIPTS: executing"
+
+    # Check if run as root (UID 0)
+    if [ "$(id -u)" -eq 0 ]; then
+        # Fix permissions for root user
+        chown "$(id -u)":"$(id -g)" "$SCRIPTS"
+        chmod a+x "$SCRIPTS"
+    else
+        echo -e "\e[38;5;214m$(date) WARNING: Script executed with user $(id -u):$(id -g), things can break and chown won't work\e[0m"
+        # Disable chown and chmod commands inside the script for non-root users
+        sed -i "s/^\s*chown /true # chown /g" "$SCRIPTS"
+        sed -i "s/^\s*chmod /true # chmod /g" "$SCRIPTS"
+    fi
+
+    # Replace the shebang in the script with the valid one
+    sed -i "1s|^.*|#!$shebang|" "$SCRIPTS"
+
+    # Optionally use 'source' to share env variables, when requested
+    if [ "${ha_entry_source:-null}" = true ]; then
+        # Replace exit with return, so sourced scripts can return errors
+        sed -i -E 's/^\s*exit ([0-9]+)/return \1 \|\| exit \1/g' "$SCRIPTS"
+        sed -i 's/bashio::exit\.nok/return 1/g' "$SCRIPTS"
+        sed -i 's/bashio::exit\.ok/return 0/g' "$SCRIPTS"
+        # shellcheck disable=SC1090
+        source "$SCRIPTS" || echo -e "\033[0;31mError\033[0m : $SCRIPTS exiting $?"
+    else
+        "$SCRIPTS" || echo -e "\033[0;31mError\033[0m : $SCRIPTS exiting $?"
+    fi
+
+    # Cleanup after execution
+    rm "$SCRIPTS"
 done
 
-# Start services.d
-if [ -d /etc/services.d ]; then
-    if "$PID1"; then
-        for service_dir in /etc/services.d/*; do
-            SCRIPTS="${service_dir}/run"
-            [ -e "$SCRIPTS" ] || continue
-            run_script "$SCRIPTS" service
-        done
-    else
-        echo "Not PID 1 — skipping service startup"
-    fi
+# Start run scripts in services.d and s6-overlay/s6-rc.d if PID1
+if $PID1; then
+    shopt -s nullglob  # Don't expand unmatched globs to themselves
+    for runfile in /etc/services.d/*/run /etc/s6-overlay/s6-rc.d/*/run; do
+        [ -f "$runfile" ] || continue
+        echo "Starting: $runfile"
+        # Replace the shebang line in each runfile
+        sed -i "1s|^.*|#!$shebang|" "$runfile"
+        # Replace s6-setuidgid calls with 'su' (bash-based) equivalents
+        sed -i -E 's|^s6-setuidgid[[:space:]]+([a-zA-Z0-9._-]+)[[:space:]]+(.*)$|su -s /bin/bash \1 -c "\2"|g' "$runfile"
+        chmod +x "$runfile"
+        ( exec "$runfile" ) & true        
+    done
+    shopt -u nullglob
 fi
 
 ######################
 # Starting container #
 ######################
 
-if "$PID1"; then
-    echo
+# If this is PID 1, keep alive and manage sigterm for clean shutdown
+if $PID1; then
+    echo " "
     echo -e "\033[0;32mEverything started!\033[0m"
-
     terminate() {
         echo "Termination signal received, forwarding to subprocesses..."
-
-        if command -v pgrep &> /dev/null; then
-            for pid in $(pgrep -P "$$"); do
+        # Terminate all direct child processes
+        if command -v pgrep &>/dev/null; then
+            for pid in $(pgrep -P $$); do
                 echo "Terminating child PID $pid"
                 kill -TERM "$pid" 2>/dev/null || echo "Failed to terminate PID $pid"
             done
         else
+            # Fallback: Scan /proc for children
             for pid in /proc/[0-9]*/; do
                 pid=${pid#/proc/}
                 pid=${pid%/}
@@ -126,19 +138,20 @@ if "$PID1"; then
                 fi
             done
         fi
-
-        sleep 5
-        kill -KILL -$$ 2>/dev/null || true
         wait
         echo "All subprocesses terminated. Exiting."
         exit 0
     }
-
     trap terminate SIGTERM SIGINT
-    wait -n
+    # Main keep-alive loop
+    while :; do
+        sleep infinity &
+        wait $!
+    done
 else
-    echo
+    echo " "
     echo -e "\033[0;32mStarting the upstream container\033[0m"
-    echo
+    echo " "
+    # Launch optional mods script if present
     if [ -f /docker-mods ]; then exec /docker-mods; fi
 fi
