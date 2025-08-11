@@ -48,17 +48,30 @@ Ensure you have the following installed on your system:
          - ssl=false  # Enable/disable SSL
          - certfile=fullchain.pem  # SSL certificate file (located in /ssl/)
          - keyfile=privkey.pem  # SSL key file (located in /ssl/)
-         - pi_password=  # Optional: Set SSH user password
+         - pi_password=  # Optional: Set web terminal password for user `pi`
          - MQTT_HOST_manual=  # Optional: Manual MQTT host
          - MQTT_PASSWORD_manual=  # Optional: Manual MQTT password
          - MQTT_PORT_manual=  # Optional: Manual MQTT port
          - MQTT_USER_manual=  # Optional: Manual MQTT user
+         - PULSE_SERVER=unix:/tmp/pulseaudio.socket 
+         - PULSE_COOKIE=/tmp/pulseaudio.cookie 
+
        volumes:
          - ./config:/config  # All your configuration files - and location of the default Birdsongs folder
          - ./ssl:/ssl  # SSL certificates
          - /dev/shm:/dev/shm  # Shared memory
+         - /tmp/pulseaudio.socket:/tmp/pulseaudio.socket
+         - /tmp/pulseaudio.client.conf:/etc/pulse/client.conf
+
+       devices:
+         - /dev/snd:/dev/snd
+      
+       group_add:
+         - audio
+
        tmpfs:
          - /tmp # Optional
+
    ```
 
 3. **Start the Container**
@@ -74,6 +87,7 @@ Ensure you have the following installed on your system:
    http://localhost:8001 # Or whatever port you have configured
    ```
    Replace `localhost` with your server's IP address if running on another machine.
+   When prompted for credentials in the web terminal, use the username `pi` and the password defined by `pi_password` (blank if unset).
 
 ## troubleshoot
 

@@ -1,7 +1,19 @@
-## 2025.07.03 (24-07-2025)
+## 2025.08.11 (11-08-2025)
+- Fix audio group to detect USB sound cards
+
+## 2025.08.10 (10-08-2025)
+- Fix web terminal password when running container standalone
+
+## 2025.07.09 (04-08-2025)
 - Minor bugs fixed
-## 2025.07.02 (24-07-2025)
+## 2025.07.08 (04-08-2025)
 - Minor bugs fixed
+## 2025.07.07 (04-08-2025)
+- Fix pulseaudio standalone @ignmedia
+
+## 2025.07.06 (03-08-2025)
+- Use wikipedia for images
+
 ## 2025.07.01 (24-07-2025)
 - Fix birdweather
 

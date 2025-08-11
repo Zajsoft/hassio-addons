@@ -1,5 +1,4 @@
 ## &#9888; Open Issue : [🐛 [Postgres 17] Error with Teslamate en HomeAssistant (opened 2025-07-09)](https://github.com/alexbelgium/hassio-addons/issues/1944) by [@cortesmario](https://github.com/cortesmario)
-## &#9888; Open Issue : [🐛 [postgres 17] vector and chord library not loaded? (opened 2025-07-17)](https://github.com/alexbelgium/hassio-addons/issues/1967) by [@dothebart](https://github.com/dothebart)
 # Home assistant add-on: Postgres
 
 [![Donate][donation-badge]](https://www.buymeacoffee.com/alexbelgium)
@@ -57,7 +56,7 @@ For more information, check the [official PostgreSQL image docs](https://hub.doc
 
 ### Custom Scripts and Environment Variables
 
-This addon supports custom scripts and environment variables:
+This addon supports custom scripts and environment variables through the `addon_config` mapping:
 
 - **Custom scripts**: See [Running Custom Scripts in Addons](https://github.com/alexbelgium/hassio-addons/wiki/Running-custom-scripts-in-Addons)
 - **Environment variables**: See [Add Environment Variables to your Addon](https://github.com/alexbelgium/hassio-addons/wiki/Add-Environment-variables-to-your-Addon)

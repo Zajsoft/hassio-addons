@@ -110,6 +110,9 @@ RUN \
     # Give access to caddy for files owned by the user, to allow files modification
     groupmod -o -g 1000 caddy && usermod -o -u 1000 caddy && \
     \
+    # Give access to audio devices
+    usermod -aG audio "$USER" && \
+    \
     # Ensure always pi is used
     grep -srl "/etc/passwd" "$HOME/BirdNET-Pi/" | while IFS= read -r file; do sed -i "s=/etc/passwd=/etc/passwd | head -1=g" "$file"; done && \
     \
@@ -163,6 +166,10 @@ ADD "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templat
 # Entrypoint modifications
 ADD "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templates/ha_entrypoint_modif.sh" "/ha_entrypoint_modif.sh"
 RUN chmod 777 /ha_entrypoint.sh /ha_entrypoint_modif.sh && /ha_entrypoint_modif.sh && rm /ha_entrypoint_modif.sh
+
+# Standalone bashio command
+ADD "https://raw.githubusercontent.com/alexbelgium/hassio-addons/master/.templates/bashio-standalone.sh" "/.bashio-standalone.sh"
+RUN chmod 777 /.bashio-standalone.sh
 
 # Avoid config.yaml interference
 WORKDIR /config
