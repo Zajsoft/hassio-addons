@@ -1,3 +1,37 @@
+## 1.142.0-2 (13-09-2025)
+- Minor bugs fixed
+## 1.142.0 (12-09-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
+
+## 1.141.1-2 (09-09-2025)
+- Minor bugs fixed
+
+## 1.141.1 (09-09-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
+
+## 1.140.1 (31-08-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
+
+## 1.140.0 (30-08-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
+
+## 1.139.4 (27-08-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
+
+## 1.139.3 (25-08-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
+
+## 1.139.2 (24-08-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
+
+## 1.138.1 (19-08-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
+
+## 1.138.0-1 (19-08-2025)
+- New option : skip_permissions_check to skip permissions check
+
+## 1.138.0 (16-08-2025)
+- Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)
 
 ## 1.137.3 (01-08-2025)
 - Update to latest version from imagegenius/docker-immich (changelog : https://github.com/imagegenius/docker-immich/releases)

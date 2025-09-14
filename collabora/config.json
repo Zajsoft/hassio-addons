@@ -12,16 +12,19 @@
   "image": "ghcr.io/alexbelgium/collabora-{arch}",
   "init": false,
   "map": [
-    "addon_config:rw"
+    "addon_config:rw",
+    "ssl:ro"
   ],
-  "name": "WIP - Collabora",
+  "name": "Collabora",
   "options": {
-    "domain": "",
-    "username": "",
-    "password": "",
     "aliasgroup1": "",
-    "dictionaries": "",
-    "extra_params": ""
+    "certfile": "fullchain.pem",
+    "domain": "",
+    "extra_params": "--o:ssl.enable=false --o:user_interface.use_integration_theme=false --o:net.proto=IPv4",
+    "keyfile": "privkey.pem",
+    "password": "",
+    "ssl": false,
+    "username": ""
   },
   "ports": {
     "9980/tcp": 9980
@@ -30,15 +33,21 @@
     "9980/tcp": "Web interface"
   },
   "schema": {
-    "domain": "str?",
-    "username": "str?",
-    "password": "password?",
-    "aliasgroup1": "str?",
+    "TZ": "str?",
+    "aliasgroup1": "str",
+    "cert_domain": "bool?",
+    "certfile": "str",
     "dictionaries": "str?",
+    "domain1": "str?",
     "extra_params": "str?",
-    "TZ": "str?"
+    "keyfile": "str",
+    "password": "password",
+    "server_name": "str?",
+    "ssl": "bool",
+    "username": "str"
   },
   "slug": "collabora",
   "url": "https://github.com/alexbelgium/hassio-addons",
-  "version": "25.4.4"
+  "version": "25.4.5-11",
+  "webui": "[PROTO:ssl]://[HOST]:[PORT:9980]/browser/dist/admin/admin.html"
 }

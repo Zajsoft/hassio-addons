@@ -137,7 +137,8 @@
     "data_location": "str",
     "library_location": "str?",
     "localdisks": "str?",
-    "networkdisks": "str?"
+    "networkdisks": "str?",
+    "skip_permissions_check": "bool?"
   },
   "services": [
     "mysql:want"
@@ -146,7 +147,7 @@
   "udev": true,
   "url": "https://github.com/alexbelgium/hassio-addons",
   "usb": true,
-  "version": "1.137.3",
+  "version": "1.142.0-2",
   "video": true,
   "webui": "http://[HOST]:[PORT:8080]"
 }

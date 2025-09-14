@@ -78,12 +78,13 @@ environment:
   }
 image: ghcr.io/alexbelgium/grampsweb-{arch}
 init: false
-options: {
+options:
+  {
     "CELERY_NUM_WORKERS": 2,
     "GUNICORN_NUM_WORKERS": 8,
     "certfile": "fullchain.pem",
     "keyfile": "privkey.pem",
-    "ssl": false
+    "ssl": false,
   }
 map:
   - type: addon_config
@@ -116,5 +117,5 @@ services:
 slug: grampsweb
 tmpfs: true
 url: https://github.com/alexbelgium/hassio-addons/tree/master/grampsweb
-version: "25.7.3"
+version: "25.8.0"
 webui: "[PROTO:ssl]://[HOST]:[PORT:5001]"

@@ -42,6 +42,27 @@ fi
 # General elements
 ##################
 
+# Use tphakala model v2 if enabled
+if [[ -f "$HOME/BirdNET-Pi/model/BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite2" ]]; then
+    mv "$HOME/BirdNET-Pi/model/BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite2" "$HOME/BirdNET-Pi/model/BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite"
+fi
+if [[ -d "$HOME/BirdNET-Pi/model/labels_nm2" ]]; then
+    mv "$HOME/BirdNET-Pi/model/labels_nm2" "$HOME/BirdNET-Pi/model/labels_nm"
+fi
+if bashio::config.true 'Use_tphakala_model_v2'; then
+    echo "... applying tphakala model v2"
+    if  [[ -f "$HOME/BirdNET-Pi/model/BirdNET-Go_classifier.tflite" ]] && [[ -d "$HOME/BirdNET-Pi/model/labels_go" ]]; then
+        # Move labels
+        mv "$HOME/BirdNET-Pi/model/labels_nm" "$HOME/BirdNET-Pi/model/labels_nm2" || bashio::log.warning "Failed to move labels_nm"
+        mv "$HOME/BirdNET-Pi/model/labels_go" "$HOME/BirdNET-Pi/model/labels_nm" || bashio::log.warning "Failed to move labels_go"
+        # Move model
+        mv "$HOME/BirdNET-Pi/model/BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite" "$HOME/BirdNET-Pi/model/BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite2" || bashio::log.warning "Failed to move base model"
+        mv "$HOME/BirdNET-Pi/model/BirdNET-Go_classifier.tflite" "$HOME/BirdNET-Pi/model/BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite" || bashio::log.warning "Failed to move Go classifier"
+    else
+    bashio::log.fatal "model or labels not found, skipping"
+    fi
+fi
+
 # Correct language labels according to birdnet.conf
 echo "... adapting labels according to birdnet.conf"
 if export "$(grep "^DATABASE_LANG" /config/birdnet.conf)"; then
@@ -84,7 +105,7 @@ fi
 
 # Allow pulseaudio system
 echo "... allow pulseaudio as root as backup"
-sed -i 's#pulseaudio --start#su - pi -c "pulseaudio --start"#g' "$HOME"/BirdNET-Pi/scripts/birdnet_recording.sh
+sed -i 's#pulseaudio --start#pulseaudio --start || pulseaudio --system#g' "$HOME"/BirdNET-Pi/scripts/birdnet_recording.sh
 
 # Send services log to container logs
 echo "... redirecting services logs to container logs"
@@ -123,6 +144,8 @@ if ! grep -q "http://:8081" /etc/caddy/Caddyfile; then
         rm /etc/caddy/Caddyfile.original
     fi
 fi
+# Fix weekly report
+sed -i 's|localhost|localhost:8081|g' "$HOME/BirdNET-Pi/scripts/weekly_report.sh"
 
 # Correct webui paths
 echo "... correcting webui paths"

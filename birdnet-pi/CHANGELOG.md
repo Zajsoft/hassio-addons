@@ -1,3 +1,35 @@
+## 2025.09.11 (14-09-2025)
+- New option to use tphakala's modified model
+
+## 2025.09.04 (12-09-2025)
+- Minor bugs fixed
+## 2025.09.03 (09-09-2025)
+- Minor bugs fixed
+
+## 2025.09.01 (07-09-2025)
+- Improve pulseaudio start when running container standalone
+## 2025.08.23 (25-08-2025)
+- Minor bugs fixed
+## 2025.08.22 (24-08-2025)
+- Fix interactive graph
+- Fix weekly report
+
+## 2025.08.16 (20-08-2025)
+- Cleaned code and clarify new options
+  - Add interactive chart option : #107
+  - New plot : #105
+  - Add species management tools : #104
+  - Add species confirmation option to recordings : #102
+  - Add selectable duration mini-graphs for species pages : #101
+
+## 2025.08.15 (20-08-2025)
+- Minor bugs fixed
+## 2025.08.14 (19-08-2025)
+- Minor bugs fixed
+## 2025.08.13 (19-08-2025)
+- Minor bugs fixed
+## 2025.08.12 (17-08-2025)
+- Minor bugs fixed
 ## 2025.08.11 (11-08-2025)
 - Fix audio group to detect USB sound cards
 

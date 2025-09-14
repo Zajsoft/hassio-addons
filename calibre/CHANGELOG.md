@@ -1,4 +1,12 @@
 
+## 8.10.0 (06-09-2025)
+- Update to latest version from linuxserver/docker-calibre (changelog : https://github.com/linuxserver/docker-calibre/releases)
+## 8.9.0-7 (23-08-2025)
+- https required for ingress
+
+## 8.9.0 (23-08-2025)
+- Update to latest version from linuxserver/docker-calibre (changelog : https://github.com/linuxserver/docker-calibre/releases)
+
 ## 8.8.0 (09-08-2025)
 - Update to latest version from linuxserver/docker-calibre (changelog : https://github.com/linuxserver/docker-calibre/releases)
 

@@ -1,4 +1,11 @@
-- Disable port by default for security purposes, it can be readded from the addon options. Ingress access is not affected @soosp
+## v0.8.1-12 (16-08-2025)
+- Replace s6-based shutdown with standard command to avoid s6-svwait error
+
+## v0.8.1-11 (15-08-2025)
+- Minor bugs fixed
+## v0.8.1-10 (13-08-2025)
+- Disable port by default for security purposes; it can be readded from the addon options. Ingress access is not affected @soosp
+- Document internal domain name for accessing the REST API without exposing the port.
 
 ## v0.8.1-9 (14-11-2024)
 - Align behavior with other addons : map /addons_config/xxx-scrutiny to enable env injection or custom scripts

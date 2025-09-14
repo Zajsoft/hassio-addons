@@ -106,10 +106,13 @@ esac
 echo "Creating symlinks"
 mkdir -p /config/addons_config/tandoor_recipes/mediafiles
 chmod -R 755 /config/addons_config/tandoor_recipes
-mkdir -p /data/recipes/staticfiles
-chmod 755 /data/recipes/staticfiles
-ln -s /config/addons_config/tandoor_recipes/mediafiles /opt/recipes
-ln -s /data/recipes/staticfiles /opt/recipes
+export MEDIA_ROOT="/config/addons_config/tandoor_recipes/mediafiles"
+export STATIC_ROOT="/config/addons_config/tandoor_recipes/staticfiles"
+
+# Set permissions
+echo "... setting permissions for nginx user"
+usermod -o -u 0 nginx
+groupmod -o -g 0 nginx
 
 if bashio::config.has_value "externalfiles_folder"; then
     externalfiles_folder="$(bashio::config "externalfiles_folder")"

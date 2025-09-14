@@ -38,6 +38,8 @@ RUN chmod 744 /ha_lsio.sh && if grep -qr "lsio" /etc; then /ha_lsio.sh "$CONFIGL
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3015,SC2016
+# Add rootfs
+COPY rootfs/ /
 RUN \
     # Install dependencies
     echo "Install dependencies" && \
@@ -84,6 +86,12 @@ RUN \
     \
     # Modify installer
     ##################
+    # Use my repository
+    cd / && \
+    sed -i "s|Nachtzuster|alexbelgium|g" newinstaller.sh && \
+    cd /home/pi && \
+    # Install open PR
+    chmod +x /helpers/merge_open_prs.sh && \
     # Avoid rebooting at end of installation
     sed -i "/reboot/d" /newinstaller.sh && \
     # Use apt-get as without user action
@@ -95,6 +103,8 @@ RUN \
     sed -i '/git clone/a sed -i "/CURRENT_TIMEZONE/s/$/ || true/" $HOME/BirdNET-Pi/scripts/install_birdnet.sh' /newinstaller.sh && \
     # Remove all instances of sudo from the newinstaller
     sed -i -e "s|== 0|== 7|g" -e "s|sudo -n true|true|g" -e "s|sudo -K|true|g" /newinstaller.sh && \
+    # Merge all PR
+    sed -i '/git clone/a sed -i "/exit installation if anything fails/a cd $HOME/BirdNET-Pi \&\& /./helpers/merge_open_prs.sh" $HOME/BirdNET-Pi/scripts/install_birdnet.sh' /newinstaller.sh && \
     \
     # Execute installer
     /./newinstaller.sh && \
@@ -132,9 +142,6 @@ ENV S6_CMD_WAIT_FOR_SERVICES=1 \
 ##################
 # 3 Install apps #
 ##################
-
-# Add rootfs
-COPY rootfs/ /
 
 # Uses /bin for compatibility purposes
 # hadolint ignore=DL4005
