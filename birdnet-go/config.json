@@ -107,7 +107,6 @@
     "SYS_RESOURCE"
   ],
   "schema": {
-    "ALSA_CARD": "int?",
     "BIRDSONGS_FOLDER": "str?",
     "TZ": "str?",
     "cifsdomain": "str?",
@@ -124,5 +123,5 @@
   "udev": true,
   "url": "https://github.com/alexbelgium/hassio-addons/tree/master/birdnet-go",
   "usb": true,
-  "version": "nightly-20250904"
+  "version": "nightly-20250904_test2"
 }
