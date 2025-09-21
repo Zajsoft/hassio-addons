@@ -105,11 +105,13 @@ case $(bashio::config 'DB_CONNECTION') in
         bashio::log.warning "Uninstalling the MariaDB addon will remove any data"
 
         bashio::log.info "Creating database for Firefly-iii if required"
+        # Create database without SSL requirement
         mysql \
-            -u "${DB_USERNAME}" -p"${DB_PASSWORD}" \
-            -h "${DB_HOST}" -P "${DB_PORT}" \
-            -e "CREATE DATABASE IF NOT EXISTS \`firefly\` ;"
-        ;;
+                --skip-ssl \
+                -u "${DB_USERNAME}" -p"${DB_PASSWORD}" \
+                -h "${DB_HOST}" -P "${DB_PORT}" \
+                -e "CREATE DATABASE IF NOT EXISTS \`firefly\`;"
+    ;;
 
         # Use remote
     *)
